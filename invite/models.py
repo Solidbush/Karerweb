@@ -80,8 +80,8 @@ class BaseInvite(models.Model):
                 ~models.Q(status__in=["canceled"]), product_id=self.product_id, order__karer_id=self.order.karer_id
             ).aggregate(sum=models.Sum('weight'))['sum'] or 0)
         delta = imports - exports
-        # if delta < self.weight:
-        #     raise ValidationError(f"Продукт не достатучном колечестве, имеется {delta} {self.product.unit}")
+        if delta < self.weight:
+             raise ValidationError(f"Продукт не достатучном колечестве, имеется {delta} {self.product.unit}")
         return super().clean()
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None) -> None:
